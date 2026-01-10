@@ -41,5 +41,9 @@ void mostrar_tauler(int tauler[MIDA][MIDA], int mostrar_vaixells) {
 
 // Copia un tauler a un altre
 void copiar_tauler(int origen[MIDA][MIDA], int desti[MIDA][MIDA]) {
-    // Recórrer i copiar cada casella
+    for (int i = 0; i < MIDA; i++) {
+        for (int j = 0; j < MIDA; j++) {
+            desti[i][j] = origen[i][j];
+        }
+    }
 }
