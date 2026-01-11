@@ -30,5 +30,8 @@ typedef struct {
 */ 
 void obtenir_configuracio_flota(int tipus, Flota *flota);
 int es_posicio_valida(int tauler[MIDA][MIDA], int fila, int col, int mida, int orientacio);
+void col·locar_vaixell(int tauler[MIDA][MIDA], int fila, int col, int mida, int orientacio);
+void generar_flota(int tauler[MIDA][MIDA], int tipus_flota);
+void omplir_aigua_voltant(int tauler[MIDA][MIDA], int fila_inici, int col_inici, int mida, int orientacio);
 // Millor sense dieresi (per compatibilitat)
 #endif

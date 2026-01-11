@@ -92,3 +92,52 @@ int es_posicio_valida(int tauler[MIDA][MIDA], int fila, int col, int mida, int o
     
     return 1;  // Tot OK, posició vàlida
 }
+// Col·loca un vaixell al tauler
+void col·locar_vaixell(int tauler[MIDA][MIDA], int fila, int col, int mida, int orientacio) {
+    int i;
+    
+    if (orientacio == HORITZONTAL) {
+        // Recórrer columnes: col, col+1, col+2, ..., col+mida-1
+        for (i = 0; i < mida; i++) {
+            tauler[fila][col + i] = VAIXELL;
+        }
+    } else { // VERTICAL
+        // Recórrer files: fila, fila+1, fila+2, ..., fila+mida-1
+        for (i = 0; i < mida; i++) {
+            tauler[fila + i][col] = VAIXELL;
+        }
+    }
+}
+
+// Omple d'aigua (2) les caselles al voltant d'un vaixell enfonsat
+void omplir_aigua_voltant(int tauler[MIDA][MIDA], int fila_inici, int col_inici, int mida, int orientacio) {
+    // Per cada casella del vaixell:
+    //   Omplir les 8 caselles adjacents amb AIGUA_TOCADA (2)
+    //   (només si estan dins del tauler i són AIGUA (0))
+}
+
+// Genera tots els vaixells d'una flota aleatòriament
+void generar_flota(int tauler[MIDA][MIDA], int tipus_flota) {
+    Flota flota;
+    obtenir_configuracio_flota(tipus_flota, &flota);
+    
+    srand(time(NULL)); // Inicialitzar aleatorietat
+    
+    // Per cada tipus de vaixell (del més gran al més petit):
+    //   - Portaavions (mida 5): repetir flota.portaavions vegades
+    //   - Cuirassat (mida 4): repetir flota.cuirassats vegades
+    //   - etc.
+    
+    // Per cada vaixell:
+    //   int col·locat = 0;
+    //   while (!col·locat) {
+    //     int fila = rand() % MIDA;
+    //     int col = rand() % MIDA;
+    //     int orientacio = rand() % 2; // 0 o 1
+    //     
+    //     if (es_posicio_valida(tauler, fila, col, mida_vaixell, orientacio)) {
+    //       col·locar_vaixell(tauler, fila, col, mida_vaixell, orientacio);
+    //       col·locat = 1;
+    //     }
+    //   }
+}
