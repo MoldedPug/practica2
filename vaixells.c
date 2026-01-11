@@ -32,7 +32,6 @@ void obtenir_configuracio_flota(int tipus, Flota *flota) {
         flota->destructors = 0;
         flota->fragates = 0;
         flota->submarins = 0;
-        return -1;
     }
 }
 
@@ -92,6 +91,7 @@ int es_posicio_valida(int tauler[MIDA][MIDA], int fila, int col, int mida, int o
     
     return 1;  // Tot OK, posició vàlida
 }
+
 // Col·loca un vaixell al tauler
 void col·locar_vaixell(int tauler[MIDA][MIDA], int fila, int col, int mida, int orientacio) {
     int i;
@@ -111,9 +111,42 @@ void col·locar_vaixell(int tauler[MIDA][MIDA], int fila, int col, int mida, int
 
 // Omple d'aigua (2) les caselles al voltant d'un vaixell enfonsat
 void omplir_aigua_voltant(int tauler[MIDA][MIDA], int fila_inici, int col_inici, int mida, int orientacio) {
-    // Per cada casella del vaixell:
-    //   Omplir les 8 caselles adjacents amb AIGUA_TOCADA (2)
-    //   (només si estan dins del tauler i són AIGUA (0))
+    int i, df, dc, nf, nc;
+    
+    // Per cada casella del vaixell
+    for (i = 0; i < mida; i++) {
+        int fila_actual, col_actual;
+        
+        if (orientacio == HORITZONTAL) {
+            fila_actual = fila_inici;
+            col_actual = col_inici + i;
+        } else { // VERTICAL
+            fila_actual = fila_inici + i;
+            col_actual = col_inici;
+        }
+        
+        // Recórrer les 8 caselles adjacents
+        for (df = -1; df <= 1; df++) {
+            for (dc = -1; dc <= 1; dc++) {
+                // Saltar la casella central (el vaixell mateix)
+                if (df == 0 && dc == 0) {
+                    continue;
+                }
+                
+                nf = fila_actual + df;
+                nc = col_actual + dc;
+                
+                // Comprovar que estem dins del tauler
+                if (nf >= 0 && nf < MIDA && nc >= 0 && nc < MIDA) {
+                    // Només omplir si és AIGUA (0)
+                    // No tocar caselles ja tocades (2) ni vaixells (1)
+                    if (tauler[nf][nc] == AIGUA) {
+                        tauler[nf][nc] = AIGUA_TOCADA;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Genera tots els vaixells d'una flota aleatòriament
@@ -123,21 +156,80 @@ void generar_flota(int tauler[MIDA][MIDA], int tipus_flota) {
     
     srand(time(NULL)); // Inicialitzar aleatorietat
     
-    // Per cada tipus de vaixell (del més gran al més petit):
-    //   - Portaavions (mida 5): repetir flota.portaavions vegades
-    //   - Cuirassat (mida 4): repetir flota.cuirassats vegades
-    //   - etc.
+    int i;
     
-    // Per cada vaixell:
-    //   int col·locat = 0;
-    //   while (!col·locat) {
-    //     int fila = rand() % MIDA;
-    //     int col = rand() % MIDA;
-    //     int orientacio = rand() % 2; // 0 o 1
-    //     
-    //     if (es_posicio_valida(tauler, fila, col, mida_vaixell, orientacio)) {
-    //       col·locar_vaixell(tauler, fila, col, mida_vaixell, orientacio);
-    //       col·locat = 1;
-    //     }
-    //   }
+    // 1. Portaavions (mida 5)
+    for (i = 0; i < flota.portaavions; i++) {
+        int col·locat = 0;
+        while (!col·locat) {
+            int fila = rand() % MIDA;
+            int col = rand() % MIDA;
+            int orientacio = rand() % 2; // 0 (HORITZONTAL) o 1 (VERTICAL)
+            
+            if (es_posicio_valida(tauler, fila, col, PORTAAVIONS, orientacio)) {
+                col·locar_vaixell(tauler, fila, col, PORTAAVIONS, orientacio);
+                col·locat = 1;
+            }
+        }
+    }
+    
+    // 2. Cuirassats (mida 4)
+    for (i = 0; i < flota.cuirassats; i++) {
+        int col·locat = 0;
+        while (!col·locat) {
+            int fila = rand() % MIDA;
+            int col = rand() % MIDA;
+            int orientacio = rand() % 2;
+            
+            if (es_posicio_valida(tauler, fila, col, CUIRASSAT, orientacio)) {
+                col·locar_vaixell(tauler, fila, col, CUIRASSAT, orientacio);
+                col·locat = 1;
+            }
+        }
+    }
+    
+    // 3. Destructors (mida 3)
+    for (i = 0; i < flota.destructors; i++) {
+        int col·locat = 0;
+        while (!col·locat) {
+            int fila = rand() % MIDA;
+            int col = rand() % MIDA;
+            int orientacio = rand() % 2;
+            
+            if (es_posicio_valida(tauler, fila, col, DESTRUCTOR, orientacio)) {
+                col·locar_vaixell(tauler, fila, col, DESTRUCTOR, orientacio);
+                col·locat = 1;
+            }
+        }
+    }
+    
+    // 4. Fragates (mida 2)
+    for (i = 0; i < flota.fragates; i++) {
+        int col·locat = 0;
+        while (!col·locat) {
+            int fila = rand() % MIDA;
+            int col = rand() % MIDA;
+            int orientacio = rand() % 2;
+            
+            if (es_posicio_valida(tauler, fila, col, FRAGATA, orientacio)) {
+                col·locar_vaixell(tauler, fila, col, FRAGATA, orientacio);
+                col·locat = 1;
+            }
+        }
+    }
+    
+    // 5. Submarins (mida 1)
+    for (i = 0; i < flota.submarins; i++) {
+        int col·locat = 0;
+        while (!col·locat) {
+            int fila = rand() % MIDA;
+            int col = rand() % MIDA;
+            int orientacio = rand() % 2; // L'orientació no importa per mida 1
+            
+            if (es_posicio_valida(tauler, fila, col, SUBMARI, orientacio)) {
+                col·locar_vaixell(tauler, fila, col, SUBMARI, orientacio);
+                col·locat = 1;
+            }
+        }
+    }
 }

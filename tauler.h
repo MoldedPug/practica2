@@ -6,6 +6,7 @@
 #define AIGUA 0
 #define VAIXELL 1
 #define AIGUA_TOCADA 2
+#define VAIXELL_TOCAT 3
 
 // Les funcions del tauler
 void inicialitzar_tauler(int tauler[MIDA][MIDA]);
